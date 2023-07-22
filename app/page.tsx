@@ -28,9 +28,9 @@ export default function Page() {
             },
             credentials: "include",
         }).then((res) => {
-            setLoading(false);
             if (res.status !== 200) {
                 setShowError(true);
+                setLoading(false);
                 return;
             }
             router.push("/dashboard");
