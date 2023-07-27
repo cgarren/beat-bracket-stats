@@ -1,9 +1,9 @@
 # Stat ideas
 ## KPI Card
-- [ ] Number of brackets
-- [ ] Total users
+- [x] Number of brackets
+- [x] Total users
 - [ ] Amount of storage being used
-- [ ] Brackets created in past 24 hours
+- [x] Brackets created in past 24 hours
 
 ## Graph
 - [ ] Number of brackets per day
@@ -14,4 +14,4 @@
 - [ ] List of brackets
   
 ##Mini Table/List Bar
-- [ ] Most popular artists
+- [x] Most popular artists
