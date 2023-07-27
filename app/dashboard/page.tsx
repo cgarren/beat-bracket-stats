@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Callout, Grid, Metric, Card, Title, Text, Flex } from "@tremor/react";
+import { Callout, Grid } from "@tremor/react";
 
 import { useRouter } from "next/navigation";
 
@@ -16,7 +16,8 @@ import cx from "classnames";
 import BarListCard from "../components/BarListCard";
 import BracketCard from "../components/BracketCard";
 
-const baseUrl: any = process.env.NEXT_PUBLIC_BACKEND_HOST;
+const baseUrl =
+    "https://7kuod6yycitu3dlcmuqc4ww3qu0zjoru.lambda-url.us-east-2.on.aws";
 
 export interface bracketSizeType {
     [key: string]: number;
