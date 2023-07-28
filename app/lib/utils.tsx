@@ -1,4 +1,5 @@
-const baseUrl = process.env.NEXT_PUBLIC_BACKEND_HOST;
+export const baseUrl =
+    "https://7kuod6yycitu3dlcmuqc4ww3qu0zjoru.lambda-url.us-east-2.on.aws";
 
 async function fetcher(url: string, method: string = "GET", body: any = null) {
     const res = await fetch(url, {

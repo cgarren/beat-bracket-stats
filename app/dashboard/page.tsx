@@ -16,8 +16,7 @@ import cx from "classnames";
 import BarListCard from "../components/BarListCard";
 import BracketCard from "../components/BracketCard";
 
-const baseUrl =
-    "https://7kuod6yycitu3dlcmuqc4ww3qu0zjoru.lambda-url.us-east-2.on.aws";
+import { baseUrl } from "../lib/utils";
 
 export interface bracketSizeType {
     [key: string]: number;

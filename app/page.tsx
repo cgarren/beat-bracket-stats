@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-const baseUrl: any = process.env.NEXT_PUBLIC_BACKEND_HOST;
+import { baseUrl } from "./lib/utils";
 
 export default function Page() {
     const [showError, setShowError] = useState(false);
