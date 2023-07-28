@@ -7,6 +7,11 @@ import {
     Metric,
     ProgressBar,
     DeltaType,
+    Accordion,
+    AccordionHeader,
+    AccordionBody,
+    List,
+    ListItem,
 } from "@tremor/react";
 
 export default function KPICard({
@@ -15,12 +20,16 @@ export default function KPICard({
     deltaType,
     delta,
     target,
+    accordionData,
+    accordionTitle,
 }: {
     title: string;
     metric?: number;
     deltaType?: DeltaType;
     delta?: number;
     target?: number;
+    accordionData?: string[];
+    accordionTitle?: string;
 }) {
     const progress =
         metric && target
@@ -49,6 +58,22 @@ export default function KPICard({
                     </Flex>
                     <ProgressBar value={progress} className="mt-2" />
                 </>
+            ) : null}
+            {accordionData && accordionTitle ? (
+                <Accordion className="mt-4">
+                    <AccordionHeader>
+                        <div className="space-y-2">
+                            <Text>{accordionTitle}</Text>
+                        </div>
+                    </AccordionHeader>
+                    <AccordionBody>
+                        <List className="mt-2">
+                            {accordionData.map((item) => (
+                                <ListItem key={item}>{item}</ListItem>
+                            ))}
+                        </List>
+                    </AccordionBody>
+                </Accordion>
             ) : null}
         </Card>
     );

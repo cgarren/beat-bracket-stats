@@ -33,9 +33,9 @@ export default function Page() {
         { value: number; name: string }[] | undefined
     >(undefined);
 
-    const [usersIn24hCount, setUsersIn24hCount] = useState<number | undefined>(
-        undefined
-    );
+    const [usersIn24hCount, setUsersIn24hCount] = useState<
+        string[] | undefined
+    >(undefined);
     const [bracketsIn24hCount, setBracketsIn24hCount] = useState<
         number | undefined
     >(undefined);
@@ -45,7 +45,7 @@ export default function Page() {
     const [error, setError] = useState("");
 
     function processUsers(users: any) {
-        let usersIn24h = 0;
+        let usersIn24h = [];
         let bracketsIn24h = 0;
         let bracketsCompleted = 0;
         let brackets: bracketSizeType = {
@@ -85,7 +85,7 @@ export default function Page() {
                 }
             }
             if (userHasBracketModifiedIn24h) {
-                usersIn24h++;
+                usersIn24h.push(userId);
             }
         }
 
@@ -152,7 +152,16 @@ export default function Page() {
             />
             <Grid numItemsMd={2} className="mt-6 gap-6">
                 <KPICard title="Users" metric={userCount} target={200} />
-                <KPICard title="Users in 24h" metric={usersIn24hCount} />
+                <KPICard
+                    title="Users in 24h"
+                    metric={
+                        usersIn24hCount
+                            ? usersIn24hCount.length
+                            : usersIn24hCount
+                    }
+                    accordionTitle="User List"
+                    accordionData={usersIn24hCount}
+                />
             </Grid>
             <Grid numItemsMd={2} className="mt-6 gap-6">
                 <BarListCard
