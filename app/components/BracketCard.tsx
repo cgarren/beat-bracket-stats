@@ -45,11 +45,8 @@ export default function BracketPieChart({
                                 alignItems="baseline"
                                 className="gap-1"
                             >
-                                <Metric>
-                                    {bracketsIn24hCount}/
-                                    {bracketSizeCounts.total}
-                                </Metric>
-                                <Text>recently modified</Text>
+                                <Metric>{bracketSizeCounts.total}</Metric>
+                                <Text>total</Text>
                             </Flex>
                         </Card>
                         <Card>
@@ -59,12 +56,8 @@ export default function BracketPieChart({
                                 alignItems="baseline"
                                 className="gap-1"
                             >
-                                <Metric>
-                                    {Math.round(
-                                        bracketSizeCounts.total / userCount
-                                    )}
-                                </Metric>
-                                <Text>brackets per user</Text>
+                                <Metric>{bracketsIn24hCount}</Metric>
+                                <Text>recently modified</Text>
                             </Flex>
                         </Card>
                     </Grid>
@@ -92,6 +85,40 @@ export default function BracketPieChart({
                             />
                         </Grid>
                     </Card>
+                    <Grid numItemsLg={2}>
+                        <Card>
+                            <Flex
+                                flexDirection="row"
+                                justifyContent="start"
+                                alignItems="baseline"
+                                className="gap-1"
+                            >
+                                <Metric>
+                                    {Math.round(
+                                        bracketSizeCounts.total / userCount
+                                    )}
+                                </Metric>
+                                <Text>brackets per user</Text>
+                            </Flex>
+                        </Card>
+                        <Card>
+                            <Flex
+                                flexDirection="row"
+                                justifyContent="start"
+                                alignItems="baseline"
+                                className="gap-1"
+                            >
+                                <Metric>
+                                    {Math.round(
+                                        (bracketCompletionCounts[0].value /
+                                            bracketSizeCounts.total) *
+                                            100
+                                    ) + "%"}
+                                </Metric>
+                                <Text>completed</Text>
+                            </Flex>
+                        </Card>
+                    </Grid>
                 </>
             ) : (
                 <Text>Loading...</Text>

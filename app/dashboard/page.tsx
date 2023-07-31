@@ -33,9 +33,9 @@ export default function Page() {
         { value: number; name: string }[] | undefined
     >(undefined);
 
-    const [usersIn24hCount, setUsersIn24hCount] = useState<
-        string[] | undefined
-    >(undefined);
+    const [usersIn24h, setUsersIn24h] = useState<string[] | undefined>(
+        undefined
+    );
     const [bracketsIn24hCount, setBracketsIn24hCount] = useState<
         number | undefined
     >(undefined);
@@ -45,7 +45,7 @@ export default function Page() {
     const [error, setError] = useState("");
 
     function processUsers(users: any) {
-        let usersIn24h = [];
+        let usersIn24hList = [];
         let bracketsIn24h = 0;
         let bracketsCompleted = 0;
         let brackets: bracketSizeType = {
@@ -85,7 +85,7 @@ export default function Page() {
                 }
             }
             if (userHasBracketModifiedIn24h) {
-                usersIn24h.push(userId);
+                usersIn24hList.push(`${user.userName} (${userId})`);
             }
         }
 
@@ -103,7 +103,7 @@ export default function Page() {
         //limit array to 10 arists
         artists = artists.slice(0, 10);
 
-        setUsersIn24hCount(usersIn24h);
+        setUsersIn24h(usersIn24hList);
         setUserCount(Object.keys(users).length);
         setArtistList(artists);
         setBracketsIn24hCount(bracketsIn24h);
@@ -154,13 +154,9 @@ export default function Page() {
                 <KPICard title="Users" metric={userCount} target={200} />
                 <KPICard
                     title="Users in 24h"
-                    metric={
-                        usersIn24hCount
-                            ? usersIn24hCount.length
-                            : usersIn24hCount
-                    }
+                    metric={usersIn24h ? usersIn24h.length : usersIn24h}
                     accordionTitle="User List"
-                    accordionData={usersIn24hCount}
+                    accordionData={usersIn24h}
                 />
             </Grid>
             <Grid numItemsMd={2} className="mt-6 gap-6">
