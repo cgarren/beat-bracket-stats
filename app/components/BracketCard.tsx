@@ -5,7 +5,6 @@ import { Card, Flex, Text, Title, Grid, Metric, Divider } from "@tremor/react";
 import { bracketSizeType } from "../dashboard/page";
 
 function convertObjectToPieChartData(obj: bracketSizeType) {
-    console.log(obj);
     const data = [];
     for (const key of Object.keys(obj)) {
         if (key === "total") continue;
@@ -94,9 +93,9 @@ export default function BracketPieChart({
                                 className="gap-1"
                             >
                                 <Metric>
-                                    {Math.round(
+                                    {(
                                         bracketSizeCounts.total / userCount
-                                    )}
+                                    ).toFixed(2)}
                                 </Metric>
                                 <Text>brackets per user</Text>
                             </Flex>
