@@ -75,13 +75,21 @@ export default function Page() {
                 }
 
                 // add artist to artists object or increment count
-                const artist = artists.find(
-                    (artist) => artist.name === bracket.artistName
-                );
-                if (artist) {
-                    artist.value++;
-                } else {
-                    artists.push({ name: bracket.artistName, value: 1 });
+                const artistName =
+                    bracket.songSource && bracket.songSource.type === "artist"
+                        ? bracket.songSource.artist.name
+                        : bracket.artistName
+                        ? bracket.artistName
+                        : null;
+                if (artistName) {
+                    const artist = artists.find(
+                        (artist) => artist.name === artistName
+                    );
+                    if (artist) {
+                        artist.value++;
+                    } else {
+                        artists.push({ name: artistName, value: 1 });
+                    }
                 }
             }
             if (userHasBracketModifiedIn24h) {
@@ -112,8 +120,7 @@ export default function Page() {
             { name: "Completed", value: bracketsCompleted },
             { name: "In Progress", value: brackets.total - bracketsCompleted },
         ]);
-
-        console.log(bracketsIn24h, brackets);
+        console.log(artists);
     }
 
     useEffect(() => {
