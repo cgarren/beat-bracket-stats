@@ -36,6 +36,9 @@ export default function Page() {
     const [usersIn24h, setUsersIn24h] = useState<string[] | undefined>(
         undefined
     );
+    const [usersIn72h, setUsersIn72h] = useState<string[] | undefined>(
+        undefined
+    );
     const [bracketsIn24hCount, setBracketsIn24hCount] = useState<
         number | undefined
     >(undefined);
@@ -46,7 +49,9 @@ export default function Page() {
 
     function processUsers(users: any) {
         let usersIn24hList = [];
+        let usersIn72hList = [];
         let bracketsIn24h = 0;
+        let bracketsIn72h = 0;
         let bracketsCompleted = 0;
         let brackets: bracketSizeType = {
             total: 0,
@@ -55,6 +60,7 @@ export default function Page() {
         for (const userId of Object.keys(users)) {
             const user = users[userId];
             let userHasBracketModifiedIn24h = false;
+            let userHasBracketModifiedIn72h = false;
             for (const bracket of user.brackets) {
                 // increment brackets count
                 brackets.total++;
@@ -67,6 +73,12 @@ export default function Page() {
                 if (bracket.lastModifiedDate > Date.now() - 86400000) {
                     userHasBracketModifiedIn24h = true;
                     bracketsIn24h++;
+                }
+
+                // increment brackets in 72h count
+                if (bracket.lastModifiedDate > Date.now() - 86400000 * 3) {
+                    userHasBracketModifiedIn72h = true;
+                    bracketsIn72h++;
                 }
 
                 // increment completed brackets count
@@ -95,6 +107,9 @@ export default function Page() {
             if (userHasBracketModifiedIn24h) {
                 usersIn24hList.push(`${user.userName} (${userId})`);
             }
+            if (userHasBracketModifiedIn72h) {
+                usersIn72hList.push(`${user.userName} (${userId})`);
+            }
         }
 
         // sort artist array
@@ -112,6 +127,7 @@ export default function Page() {
         artists = artists.slice(0, 10);
 
         setUsersIn24h(usersIn24hList);
+        setUsersIn72h(usersIn72hList);
         setUserCount(Object.keys(users).length);
         setArtistList(artists);
         setBracketsIn24hCount(bracketsIn24h);
@@ -166,13 +182,19 @@ export default function Page() {
                 color="rose"
                 icon={ExclamationIcon}
             />
-            <Grid numItemsMd={2} className="mt-6 gap-6">
+            <Grid numItemsMd={3} numItemsLg={3} className="mt-6 gap-6">
                 <KPICard title="Users" metric={userCount} target={200} />
                 <KPICard
                     title="Users in 24h"
                     metric={usersIn24h ? usersIn24h.length : usersIn24h}
                     accordionTitle="User List"
                     accordionData={usersIn24h}
+                />
+                <KPICard
+                    title="Users in 72h"
+                    metric={usersIn72h ? usersIn72h.length : usersIn72h}
+                    accordionTitle="User List"
+                    accordionData={usersIn72h}
                 />
             </Grid>
             <Grid numItemsMd={2} className="mt-6 gap-6">
