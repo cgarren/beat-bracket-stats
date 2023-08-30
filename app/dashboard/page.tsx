@@ -136,7 +136,16 @@ export default function Page() {
                     router.push("/");
                     return;
                 } else {
-                    setError("Error fetching users");
+                    res.text().then((text) => {
+                        console.log(text);
+                        if (text) {
+                            setError(text);
+                            return;
+                        } else {
+                            setError("Error fetching users");
+                            return;
+                        }
+                    });
                     return;
                 }
             })
