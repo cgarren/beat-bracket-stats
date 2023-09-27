@@ -60,16 +60,21 @@ export default function KPICard({
                 </>
             ) : null}
             {accordionData && accordionTitle ? (
-                <Accordion className="mt-4">
+                <Accordion className="mt-4 overflow-x-scroll">
                     <AccordionHeader>
                         <div className="space-y-2">
                             <Text>{accordionTitle}</Text>
                         </div>
                     </AccordionHeader>
-                    <AccordionBody>
-                        <List className="mt-2">
+                    <AccordionBody className="overflow-x-scroll">
+                        <List className="mt-2 overflow-x-auto">
                             {accordionData.map((item) => (
-                                <ListItem key={item}>{item}</ListItem>
+                                <ListItem
+                                    className="!overflow-x-scroll"
+                                    key={item}
+                                >
+                                    {item}
+                                </ListItem>
                             ))}
                         </List>
                     </AccordionBody>

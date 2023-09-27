@@ -18,7 +18,7 @@ import BracketCard from "../components/BracketCard";
 
 import { baseUrl } from "../lib/utils";
 
-export interface bracketSizeType {
+export interface templateSizeType {
     [key: string]: number;
 }
 
@@ -26,8 +26,11 @@ export default function Page() {
     const router = useRouter();
 
     const [userCount, setUserCount] = useState<number | undefined>(undefined);
-    const [bracketSizeCounts, setBracketSizeCounts] = useState<
-        bracketSizeType | undefined
+    const [bracketCount, setBracketCount] = useState<number | undefined>(
+        undefined
+    );
+    const [templateSizeCounts, setTemplateSizeCounts] = useState<
+        templateSizeType | undefined
     >(undefined);
     const [bracketCompletionCounts, setBracketCompletionCounts] = useState<
         { value: number; name: string }[] | undefined
@@ -47,51 +50,34 @@ export default function Page() {
     >([]);
     const [error, setError] = useState("");
 
-    function processUsers(users: any) {
+    function processUsers(bracketUsers: any, templateUsers: any) {
         let usersIn24hList = [];
         let usersIn72hList = [];
         let bracketsIn24h = 0;
         let bracketsIn72h = 0;
         let bracketsCompleted = 0;
-        let brackets: bracketSizeType = {
+        let templates: templateSizeType = {
             total: 0,
         };
+        let brackets = 0;
         let artists: { value: number; name: string }[] = [];
-        for (const userId of Object.keys(users)) {
-            const user = users[userId];
+        for (const userId of Object.keys(bracketUsers)) {
+            const bracketUser = bracketUsers[userId];
+            const templateUser = templateUsers[userId];
             let userHasBracketModifiedIn24h = false;
             let userHasBracketModifiedIn72h = false;
-            for (const bracket of user.brackets) {
-                // increment brackets count
-                brackets.total++;
-                if (!brackets[bracket.tracks]) {
-                    brackets[bracket.tracks] = 0;
-                }
-                brackets[bracket.tracks]++;
 
-                // increment brackets in 24h count
-                if (bracket.lastModifiedDate > Date.now() - 86400000) {
-                    userHasBracketModifiedIn24h = true;
-                    bracketsIn24h++;
+            for (const template of templateUser.items) {
+                templates.total++;
+                if (!templates[template.tracks]) {
+                    templates[template.tracks] = 0;
                 }
-
-                // increment brackets in 72h count
-                if (bracket.lastModifiedDate > Date.now() - 86400000 * 3) {
-                    userHasBracketModifiedIn72h = true;
-                    bracketsIn72h++;
-                }
-
-                // increment completed brackets count
-                if (bracket.winner) {
-                    bracketsCompleted++;
-                }
+                templates[template.tracks]++;
 
                 // add artist to artists object or increment count
                 const artistName =
-                    bracket.songSource && bracket.songSource.type === "artist"
-                        ? bracket.songSource.artist.name
-                        : bracket.artistName
-                        ? bracket.artistName
+                    template.songSource && template.songSource.type === "artist"
+                        ? template.songSource.artist.name
                         : null;
                 if (artistName) {
                     const artist = artists.find(
@@ -104,11 +90,37 @@ export default function Page() {
                     }
                 }
             }
+
+            for (const bracket of bracketUser.items) {
+                // increment brackets count
+                brackets++;
+
+                // increment brackets in 24h count
+                if (bracket.lastModified > Date.now() - 86400000) {
+                    userHasBracketModifiedIn24h = true;
+                    bracketsIn24h++;
+                }
+
+                // increment brackets in 72h count
+                if (bracket.lastModified > Date.now() - 86400000 * 3) {
+                    userHasBracketModifiedIn72h = true;
+                    bracketsIn72h++;
+                }
+
+                // increment completed brackets count
+                if (bracket.winner) {
+                    bracketsCompleted++;
+                }
+            }
             if (userHasBracketModifiedIn24h) {
-                usersIn24hList.push(`${user.userName} (${userId})`);
+                usersIn24hList.push(
+                    `${bracketUser.userName} (${userId}, ${bracketUser.items.length} brackets)`
+                );
             }
             if (userHasBracketModifiedIn72h) {
-                usersIn72hList.push(`${user.userName} (${userId})`);
+                usersIn72hList.push(
+                    `${bracketUser.userName} (${userId}, ${bracketUser.items.length} brackets)`
+                );
             }
         }
 
@@ -128,31 +140,41 @@ export default function Page() {
 
         setUsersIn24h(usersIn24hList);
         setUsersIn72h(usersIn72hList);
-        setUserCount(Object.keys(users).length);
+        setUserCount(Object.keys(bracketUsers).length);
         setArtistList(artists);
         setBracketsIn24hCount(bracketsIn24h);
-        setBracketSizeCounts(brackets);
+        setBracketCount(brackets);
+        setTemplateSizeCounts(templates);
         setBracketCompletionCounts([
             { name: "Completed", value: bracketsCompleted },
-            { name: "In Progress", value: brackets.total - bracketsCompleted },
+            { name: "In Progress", value: brackets - bracketsCompleted },
         ]);
         console.log(artists);
     }
 
     useEffect(() => {
-        fetch(`${baseUrl}/users`, {
-            method: "GET",
-            credentials: "include",
-        })
-            .then((res) => {
-                if (res.status === 200) {
-                    return res.json();
-                } else if (res.status === 403) {
+        Promise.all([
+            fetch(`${baseUrl}/users?type=bracket`, {
+                method: "GET",
+                credentials: "include",
+            }),
+            fetch(`${baseUrl}/users?type=template`, {
+                method: "GET",
+                credentials: "include",
+            }),
+        ])
+            .then(([bracketRes, templateRes]) => {
+                if (bracketRes.status === 200 && templateRes.status === 200) {
+                    return Promise.all([bracketRes.json(), templateRes.json()]);
+                } else if (
+                    bracketRes.status === 403 &&
+                    templateRes.status === 403
+                ) {
                     setError("Not logged in");
                     router.push("/");
                     return;
                 } else {
-                    res.text().then((text) => {
+                    bracketRes.text().then((text) => {
                         console.log(text);
                         if (text) {
                             setError(text);
@@ -167,8 +189,8 @@ export default function Page() {
             })
             .then((data) => {
                 if (data) {
-                    console.log(data);
-                    processUsers(data);
+                    const [bracketData, templateData] = data;
+                    processUsers(bracketData, templateData);
                 }
             });
     }, []);
@@ -206,7 +228,8 @@ export default function Page() {
                 />
                 <BracketCard
                     bracketCompletionCounts={bracketCompletionCounts}
-                    bracketSizeCounts={bracketSizeCounts}
+                    templateSizeCounts={templateSizeCounts}
+                    bracketCount={bracketCount}
                     bracketsIn24hCount={bracketsIn24hCount}
                     userCount={userCount}
                 />

@@ -2,9 +2,9 @@ import PieChartCard from "./PieChart";
 
 import { Card, Flex, Text, Title, Grid, Metric, Divider } from "@tremor/react";
 
-import { bracketSizeType } from "../dashboard/page";
+import { templateSizeType } from "../dashboard/page";
 
-function convertObjectToPieChartData(obj: bracketSizeType) {
+function convertObjectToPieChartData(obj: templateSizeType) {
     const data = [];
     for (const key of Object.keys(obj)) {
         if (key === "total") continue;
@@ -17,12 +17,14 @@ function convertObjectToPieChartData(obj: bracketSizeType) {
 }
 
 export default function BracketPieChart({
-    bracketSizeCounts,
+    templateSizeCounts,
+    bracketCount,
     bracketsIn24hCount,
     bracketCompletionCounts,
     userCount,
 }: {
-    bracketSizeCounts?: bracketSizeType;
+    templateSizeCounts?: templateSizeType;
+    bracketCount?: number;
     bracketsIn24hCount?: number;
     bracketCompletionCounts?: { name: string; value: number }[];
     userCount?: number;
@@ -30,13 +32,13 @@ export default function BracketPieChart({
     return (
         <Card>
             <Title className="mb-2">Brackets</Title>
-            {bracketSizeCounts &&
-            bracketSizeCounts.total &&
+            {templateSizeCounts &&
+            templateSizeCounts.total &&
             (bracketsIn24hCount || bracketsIn24hCount === 0) &&
             bracketCompletionCounts &&
             userCount ? (
                 <>
-                    <Grid numItemsLg={2}>
+                    <Grid numItemsLg={3}>
                         <Card>
                             <Flex
                                 flexDirection="row"
@@ -44,8 +46,19 @@ export default function BracketPieChart({
                                 alignItems="baseline"
                                 className="gap-1"
                             >
-                                <Metric>{bracketSizeCounts.total}</Metric>
-                                <Text>total</Text>
+                                <Metric>{templateSizeCounts.total}</Metric>
+                                <Text>templates</Text>
+                            </Flex>
+                        </Card>
+                        <Card>
+                            <Flex
+                                flexDirection="row"
+                                justifyContent="start"
+                                alignItems="baseline"
+                                className="gap-1"
+                            >
+                                <Metric>{bracketCount}</Metric>
+                                <Text>brackets</Text>
                             </Flex>
                         </Card>
                         <Card>
@@ -67,11 +80,11 @@ export default function BracketPieChart({
                                 nameLabel="name"
                                 valueLabel="value"
                                 data={
-                                    bracketSizeCounts
+                                    templateSizeCounts
                                         ? convertObjectToPieChartData(
-                                              bracketSizeCounts
+                                              templateSizeCounts
                                           )
-                                        : bracketSizeCounts
+                                        : templateSizeCounts
                                 }
                                 //colors={["green", "blue", "orange", "red"]}
                             ></PieChartCard>
@@ -94,7 +107,7 @@ export default function BracketPieChart({
                             >
                                 <Metric>
                                     {(
-                                        bracketSizeCounts.total / userCount
+                                        templateSizeCounts.total / userCount
                                     ).toFixed(2)}
                                 </Metric>
                                 <Text>brackets per user</Text>
@@ -110,7 +123,7 @@ export default function BracketPieChart({
                                 <Metric>
                                     {Math.round(
                                         (bracketCompletionCounts[0].value /
-                                            bracketSizeCounts.total) *
+                                            templateSizeCounts.total) *
                                             100
                                     ) + "%"}
                                 </Metric>
