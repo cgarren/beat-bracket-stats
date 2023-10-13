@@ -67,28 +67,38 @@ export default function Page() {
             let userHasBracketModifiedIn24h = false;
             let userHasBracketModifiedIn72h = false;
 
-            for (const template of templateUser.items) {
-                templates.total++;
-                if (!templates[template.tracks]) {
-                    templates[template.tracks] = 0;
-                }
-                templates[template.tracks]++;
+            if (templateUser && templateUser.items) {
+                for (const template of templateUser.items) {
+                    templates.total++;
+                    if (!templates[template.tracks]) {
+                        templates[template.tracks] = 0;
+                    }
+                    templates[template.tracks]++;
 
-                // add artist to artists object or increment count
-                const artistName =
-                    template.songSource && template.songSource.type === "artist"
-                        ? template.songSource.artist.name
-                        : null;
-                if (artistName) {
-                    const artist = artists.find(
-                        (artist) => artist.name === artistName
-                    );
-                    if (artist) {
-                        artist.value++;
-                    } else {
-                        artists.push({ name: artistName, value: 1 });
+                    // add artist to artists object or increment count
+                    const artistName =
+                        template.songSource &&
+                        template.songSource.type === "artist"
+                            ? template.songSource.artist.name
+                            : null;
+                    if (artistName) {
+                        const artist = artists.find(
+                            (artist) => artist.name === artistName
+                        );
+                        if (artist) {
+                            artist.value++;
+                        } else {
+                            artists.push({ name: artistName, value: 1 });
+                        }
                     }
                 }
+            } else {
+                console.log(`no template user for ${userId}`);
+            }
+
+            if (!bracketUser || !bracketUser.items) {
+                console.log(`no bracket user for ${userId}`);
+                continue;
             }
 
             for (const bracket of bracketUser.items) {
