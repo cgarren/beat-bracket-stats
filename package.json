@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
+    "@rockset/client": "^0.9.1",
+    "@tanstack/react-query": "^5.22.2",
     "@tremor/react": "^3.4.1",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",

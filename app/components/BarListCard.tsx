@@ -14,7 +14,7 @@ export default function BarListCard({
     return (
         <Card>
             <Title className="mb-2">{title}</Title>
-            {data.length !== 0 ? (
+            {data?.length !== 0 ? (
                 <>
                     <Flex className="mt-4">
                         <Text>

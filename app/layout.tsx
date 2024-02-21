@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { RootWrapper } from "./rootWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,10 @@ export default function RootLayout({
             <head>
                 <link rel="shortcut icon" href="favicon.svg" />
             </head>
-            <body className={inter.className}>{children}</body>
+
+            <body className={inter.className}>
+                <RootWrapper>{children}</RootWrapper>
+            </body>
         </html>
     );
 }
