@@ -335,7 +335,7 @@ export default function Page() {
                 icon={ExclamationIcon}
             />
             <Grid numItemsMd={3} numItemsLg={3} className="mt-6 gap-6">
-                <KPICard title="Users" metric={userCount} target={200} />
+                <KPICard title="Users" metric={userCount} target={1000} />
                 <KPICard
                     title="Users in 24h"
                     metric={usersIn24h ? usersIn24h.length : usersIn24h}
