@@ -5,7 +5,7 @@ import { useMemo, useState, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { RocksetContext } from "../context/rocksetContext";
-import useFieldCount from "../hooks/useFieldCount";
+import useFieldCount, { fieldCountType } from "../hooks/useFieldCount";
 import useQueryLambda from "../hooks/useQueryLambda";
 
 import { Callout, Grid } from "@tremor/react";
@@ -34,17 +34,20 @@ export default function Page() {
         queryKey: ["artistCounts"],
         queryFn: () => getFieldCount("artistName"),
         select: (data) => {
-            const newData = Array.from(
-                data.slice(0, 10),
-                (element: { fieldValue: string; num: number }) => {
-                    const newElement: { value: number; name: string } = {
-                        value: element.num,
-                        name: element.fieldValue,
-                    };
-                    return newElement;
-                }
-            );
-            return newData;
+            if (data) {
+                const newData = Array.from(
+                    data.slice(0, 10),
+                    (element: { fieldValue: string; num: number }) => {
+                        const newElement: { value: number; name: string } = {
+                            value: element.num,
+                            name: element.fieldValue,
+                        };
+                        return newElement;
+                    }
+                );
+                return newData;
+            }
+            return [];
         },
         enabled: Boolean(rocksetClient),
         staleTime: 60000,

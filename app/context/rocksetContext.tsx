@@ -1,6 +1,13 @@
 import React, { createContext } from "react";
 
-export const RocksetContext = createContext(undefined);
+export const RocksetContext = createContext({
+    queryLambdas: {
+        executeQueryLambdaByTag: async (...params: any) => {
+            const ret: { results: any[] } = { results: [] };
+            return ret;
+        },
+    },
+});
 
 export function RocksetProvider({
     children,
