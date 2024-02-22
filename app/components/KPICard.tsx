@@ -17,6 +17,8 @@ import {
 export default function KPICard({
     title,
     metric,
+    secondaryMetric,
+    secondaryLabel,
     deltaType,
     delta,
     target,
@@ -25,6 +27,8 @@ export default function KPICard({
 }: {
     title: string;
     metric?: number;
+    secondaryMetric?: number;
+    secondaryLabel?: string;
     deltaType?: DeltaType;
     delta?: number;
     target?: number;
@@ -41,7 +45,12 @@ export default function KPICard({
                 <div className="truncate">
                     <Title className="mb-2">{title}</Title>
                     {metric || metric === 0 ? (
-                        <Metric className="truncate">{metric}</Metric>
+                        <>
+                            <Metric className="truncate">{metric}</Metric>
+                            {secondaryMetric && (
+                                <Text>{`${secondaryMetric} ${secondaryLabel}`}</Text>
+                            )}
+                        </>
                     ) : (
                         <Text>Loading...</Text>
                     )}

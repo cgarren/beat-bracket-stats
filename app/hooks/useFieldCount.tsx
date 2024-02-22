@@ -9,14 +9,16 @@ export default function useFieldCount() {
     const { executeQuery } = useQueryLambda();
 
     const getFieldCount = useCallback(
-        async (field: string) =>
-            executeQuery("FieldCount", [
+        async (field: string) => {
+            const res: any = await executeQuery("FieldCount", [
                 {
                     name: "fieldToCount",
                     type: "string",
                     value: field,
                 },
-            ]),
+            ]);
+            return res;
+        },
         [executeQuery]
     );
 

@@ -1,4 +1,21 @@
-import { Flex, Text, DonutChart, Legend, Color, Title } from "@tremor/react";
+import { Text, DonutChart, Legend, Color, Title, Card } from "@tremor/react";
+
+import { fieldCountType } from "../hooks/useFieldCount";
+
+export function convertObjectToPieChartData(
+    obj: fieldCountType,
+    descriptor?: string
+) {
+    const data = [];
+    for (const key of Object.keys(obj)) {
+        if (key === "total") continue;
+        data.push({
+            name: key + (descriptor ? ` ${descriptor}` : ""),
+            value: obj[key],
+        });
+    }
+    return data;
+}
 
 export default function PieChart({
     title,
@@ -7,6 +24,7 @@ export default function PieChart({
     data,
     children,
     colors = ["red", "purple", "blue", "yellow", "green", "gray"],
+    extraMetric,
 }: {
     title?: string;
     nameLabel: string;
@@ -14,34 +32,35 @@ export default function PieChart({
     data?: { name: string; value: number }[];
     children?: React.ReactNode;
     colors?: Color[];
+    extraMetric?: string;
 }) {
     return (
-        <>
-            {data && data.length !== 0 ? (
-                <Flex
-                    flexDirection="col"
-                    justifyContent="between"
-                    alignItems="center"
-                >
-                    {title ? <Title>{title}</Title> : null}
-                    <Legend
-                        categories={data.map((data) => `${data.name}`)}
-                        colors={colors}
-                        className="mt-6 justify-center"
-                    />
-                    <DonutChart
-                        variant="pie"
-                        className="mt-6"
-                        data={data}
-                        category={valueLabel}
-                        index={nameLabel}
-                        colors={colors}
-                    />
-                </Flex>
-            ) : (
-                <Text>Loading...</Text>
-            )}
+        <Card>
+            <div className="flex flex-col items-start justify-between h-full">
+                {title && <Title>{title}</Title>}
+                {data && data.length !== 0 ? (
+                    <>
+                        <Legend
+                            categories={data.map((data) => `${data.name}`)}
+                            colors={colors}
+                            className="mt-6 justify-center"
+                        />
+                        <DonutChart
+                            variant={extraMetric ? "donut" : "pie"}
+                            className="mt-6"
+                            data={data}
+                            category={valueLabel}
+                            index={nameLabel}
+                            colors={colors}
+                            label={extraMetric}
+                        />
+                    </>
+                ) : (
+                    <Text>Loading...</Text>
+                )}
+            </div>
+
             {children}
-        </>
+        </Card>
     );
 }

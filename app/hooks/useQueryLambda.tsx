@@ -1,29 +1,29 @@
-import { useCallback, useContext } from "react";
-import { RocksetContext } from "../context/rocksetContext";
+import { useCallback } from "react";
+
+import { baseUrl } from "../lib/utils";
 
 export default function useQueryLambda() {
-    const rocksetClient = useContext(RocksetContext);
-
     const executeQuery = useCallback(
         async (
             queryLambdaName: string,
             parameters: { name: string; type: string; value: string }[]
         ) => {
-            if (rocksetClient) {
-                const { results } =
-                    await rocksetClient.queryLambdas.executeQueryLambdaByTag(
-                        "commons",
-                        queryLambdaName,
-                        "latest",
-                        {
-                            parameters: parameters,
-                        }
-                    );
-                return results;
+            const res = await fetch(
+                `${baseUrl}/executeQuery?queryLambdaName=${queryLambdaName}`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify({ parameters: parameters }),
+                }
+            );
+            if (!res.ok) {
+                throw new Error(await res.text(), {
+                    cause: res.status,
+                });
             }
-            return [];
+            return res.json();
         },
-        [rocksetClient]
+        []
     );
 
     return { executeQuery };
