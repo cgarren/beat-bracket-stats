@@ -20,7 +20,7 @@ export default function UserSection({
         for (const bracket of bracketsIn24h) {
             if (
                 bracket.ownerUsername &&
-                !users.includes(bracket.ownerUsername)
+                !users?.includes(bracket.ownerUsername)
             ) {
                 users.push(bracket.ownerUsername);
             }
@@ -36,7 +36,7 @@ export default function UserSection({
         for (const bracket of bracketsIn72h) {
             if (
                 bracket.ownerUsername &&
-                !users.includes(bracket.ownerUsername)
+                !users?.includes(bracket.ownerUsername)
             ) {
                 users.push(bracket.ownerUsername);
             }
