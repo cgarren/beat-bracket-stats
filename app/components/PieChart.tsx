@@ -23,7 +23,17 @@ export default function PieChart({
     valueLabel,
     data,
     children,
-    colors = ["red", "purple", "blue", "yellow", "green", "gray"],
+    colors = [
+        "red",
+        "purple",
+        "blue",
+        "yellow",
+        "green",
+        "orange",
+        "cyan",
+        "indigo",
+        "gray",
+    ],
     extraMetric,
 }: {
     title?: string;
@@ -34,6 +44,10 @@ export default function PieChart({
     colors?: Color[];
     extraMetric?: string;
 }) {
+    console.log(
+        data?.map((data) => `${data.name}`),
+        colors
+    );
     return (
         <Card>
             <div className="flex flex-col items-start justify-between h-full">
@@ -42,7 +56,7 @@ export default function PieChart({
                     <>
                         <Legend
                             categories={data.map((data) => `${data.name}`)}
-                            colors={colors}
+                            // colors={colors}
                             className="mt-6 justify-center"
                         />
                         <DonutChart
@@ -51,7 +65,7 @@ export default function PieChart({
                             data={data}
                             category={valueLabel}
                             index={nameLabel}
-                            colors={colors}
+                            // colors={colors}
                             label={extraMetric}
                         />
                     </>

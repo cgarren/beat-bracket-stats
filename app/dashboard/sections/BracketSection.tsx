@@ -104,7 +104,7 @@ export default function BracketSection({
                             ? convertObjectToPieChartData(sizeCounts)
                             : sizeCounts
                     }
-                    //colors={["green", "blue", "orange", "red"]}
+                    // colors={["green", "blue", "orange", "red"]}
                 />
                 <PieChartCard
                     title="Song Source Type"
