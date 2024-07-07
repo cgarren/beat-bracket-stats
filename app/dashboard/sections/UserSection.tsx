@@ -48,7 +48,7 @@ export default function UserSection({
 
     return (
         <Section SectionName="Users" colClassNames="sm:grid-cols-3">
-            <KPICard title="Users" metric={userCount} target={1000} />
+            <KPICard title="Users" metric={userCount} target={2000} />
             <KPICard
                 title="Users in 24h"
                 metric={usersIn24h ? usersIn24h.length : usersIn24h}
